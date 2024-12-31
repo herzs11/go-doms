@@ -1,4 +1,4 @@
-package domains
+package domain
 
 import (
 	"fmt"
@@ -26,8 +26,9 @@ func (d *Domain) GetRedirectDomains() error {
 		TLSHandshakeTimeout:   5 * time.Second, // Maximum amount of time to wait for a TLS handshake
 		ResponseHeaderTimeout: 5 * time.Second, // Maximum amount of time to wait for a server's response headers
 		ExpectContinueTimeout: 1 * time.Second, // Maximum amount of time to wait for a 100-continue response from the server
+		Proxy:                 http.ProxyFromEnvironment,
 	}
-	client := &http.Client{
+	redir_client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			dom, err := publicsuffix.ParseFromListWithOptions(
 				publicsuffix.DefaultList, req.URL.Hostname(), &publicsuffix.FindOptions{IgnorePrivate: false},
@@ -45,7 +46,7 @@ func (d *Domain) GetRedirectDomains() error {
 	}
 
 	// Make the initial request
-	resp, err := client.Get(fmt.Sprintf("http://%s", d.DomainName))
+	resp, err := redir_client.Get(fmt.Sprintf("http://%s", d.DomainName))
 	if err != nil {
 		d.SuccessfulWebLanding = false
 		d.WebRedirectDomains = []WebRedirectDomain{}

@@ -1,8 +1,7 @@
-package domains
+package domain
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/miekg/dns"
@@ -33,11 +32,6 @@ type MXRecord struct {
 	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 	Mx        string    `json:"mx,omitempty"`
 }
-
-var (
-	DomainClient *dns.Client
-	ClientConfig *dns.ClientConfig
-)
 
 func (d *Domain) QueryMX() error {
 	msg := new(dns.Msg)
@@ -155,7 +149,7 @@ func (d *Domain) QuerySOA() error {
 }
 
 func query(msg *dns.Msg, nameserver string) (*dns.Msg, error) {
-	r, _, err := DomainClient.Exchange(msg, nameserver)
+	r, _, err := client.DNS.Exchange(msg, nameserver)
 	return r, err
 }
 
@@ -190,13 +184,4 @@ func (d *Domain) GetDNSRecords() []error {
 		errs = append(errs, err)
 	}
 	return errs
-}
-
-func init() {
-	var err error
-	ClientConfig, err = dns.ClientConfigFromFile("/etc/resolv.conf") // TODO: Make this part of the config
-	if err != nil {
-		log.Fatal(err)
-	}
-	DomainClient = new(dns.Client)
 }
