@@ -1,11 +1,10 @@
-package domains
+package domain
 
 import (
 	"encoding/xml"
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -92,23 +91,7 @@ func (d *Domain) getRobotstxt() error {
 }
 
 func (s *Sitemap) readSitemap() (URLSet, []*Sitemap, error) {
-	// add proxy
-	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   5 * time.Second, // Maximum amount of time to wait for a dial to complete
-			KeepAlive: 3 * time.Second, // Keep-alive period for an active network connection
-		}).DialContext,
-		TLSHandshakeTimeout:   5 * time.Second, // Maximum amount of time to wait for a TLS handshake
-		ResponseHeaderTimeout: 5 * time.Second, // Maximum amount of time to wait for a server's response headers
-		ExpectContinueTimeout: 1 * time.Second, // Maximum amount of time to wait for a 100-continue response from the server
-	}
-
-	// Create an HTTP client with the custom transport
-	client := &http.Client{
-		Transport: transport,
-		Timeout:   10 * time.Second, // Overall timeout for the request
-	}
-	resp, err := client.Get(s.SitemapLoc)
+	resp, err := client.HTTP.Get(s.SitemapLoc)
 	if err != nil {
 		return URLSet{}, nil, err
 	}
@@ -246,29 +229,13 @@ func (d *Domain) GetContactDomainsFromSitemap() error {
 		return fmt.Errorf("No contact pages found in sitemap")
 	}
 
-	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   5 * time.Second, // Maximum amount of time to wait for a dial to complete
-			KeepAlive: 3 * time.Second, // Keep-alive period for an active network connection
-		}).DialContext,
-		TLSHandshakeTimeout:   5 * time.Second, // Maximum amount of time to wait for a TLS handshake
-		ResponseHeaderTimeout: 5 * time.Second, // Maximum amount of time to wait for a server's response headers
-		ExpectContinueTimeout: 1 * time.Second, // Maximum amount of time to wait for a 100-continue response from the server
-	}
-
-	// Create an HTTP client with the custom transport
-	client := &http.Client{
-		Transport: transport,
-		Timeout:   10 * time.Second, // Overall timeout for the request
-	}
-
 	var domsFound = make(map[string]SitemapContactDomain)
 	for _, df := range d.SitemapContactDomains {
 		domsFound[df.DomainName] = df
 	}
 	now := time.Now()
 	for _, url := range d.contactPages {
-		resp, err := client.Get(strings.TrimSpace(url))
+		resp, err := client.HTTP.Get(strings.TrimSpace(url))
 		if err != nil {
 			log.Printf("Error performing GET request: %s\n", err)
 			continue

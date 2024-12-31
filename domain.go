@@ -1,4 +1,4 @@
-package domains
+package domain
 
 import (
 	"errors"
@@ -24,6 +24,8 @@ type Domain struct {
 	LastRanDns            time.Time              `json:"lastRanDNS,omitempty"`
 	LastRanCertSans       time.Time              `json:"lastRanCertSANs,omitempty"`
 	LastRanSitemapParse   time.Time              `json:"lastRanSitemapParse,omitempty"`
+	LastRanWhois          time.Time              `json:"LastRanWhois,omitempty"`
+	LastRanReverseWhois   time.Time              `json:"LastRanReverseWhois,omitempty"`
 	ARecords              []ARecord              `json:"aRecords"`
 	AAAARecords           []AAAARecord           `json:"aaaaRecords"`
 	MXRecords             []MXRecord             `json:"mxRecords"`
@@ -33,6 +35,9 @@ type Domain struct {
 	CertSANs              []CertSansDomain       `json:"certSANs"`
 	SitemapWebDomains     []SitemapWebDomain     `json:"sitemapWebDomains"`
 	SitemapContactDomains []SitemapContactDomain `json:"sitemapContactDomains"`
+	ReverseWhoisDomains   []MatchedDomain        `json:"reverseWhoisDomains"`
+
+	Whois *WhoisData `json:"whoisData"`
 
 	sitemapURLs  []string
 	contactPages []string
@@ -59,8 +64,8 @@ func (d *Domain) parseDomain() error {
 	return nil
 }
 
-func NewDomain(domain_name string) (*Domain, error) {
-	dn := strings.TrimSpace(domain_name)
+func NewDomain(domainName string) (*Domain, error) {
+	dn := strings.TrimSpace(domainName)
 	now := time.Now()
 	d := &Domain{DomainName: dn, CreatedAt: now, UpdatedAt: now}
 	err := d.parseDomain()
@@ -72,6 +77,8 @@ type EnrichmentConfig struct {
 	DNS              bool      `json:"dns"`
 	Sitemap          bool      `json:"sitemap"`
 	WebRedirect      bool      `json:"web_redirect"`
+	Whois            bool      `json:"whois"`
+	ReverseWhois     bool      `json:"reverse_whois"`
 	MinFreshnessDate time.Time `json:"min_freshness_date"`
 }
 
@@ -96,6 +103,12 @@ func (d *Domain) Enrich(cfg EnrichmentConfig) {
 	if d.LastRanSitemapParse.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.Sitemap {
 		d.GetDomainsFromSitemap()
 	}
+	if d.LastRanWhois.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.Whois {
+		d.GetWhoisData()
+		if d.LastRanReverseWhois.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.ReverseWhois {
+			d.GetReverseWhoisData()
+		}
+	}
 }
 
 type MatchedDomainsByStrategy struct {
@@ -103,6 +116,7 @@ type MatchedDomainsByStrategy struct {
 	CertSANs              []string `json:"certSANs"`
 	SitemapWebDomains     []string `json:"sitemapWebDomains"`
 	SitemapContactDomains []string `json:"sitemapContactDomains"`
+	ReverseWhoisDomains   []string `json:"reverseWhoisDomains"`
 }
 
 func (d *Domain) GetAllMatchedDomains() MatchedDomainsByStrategy {
@@ -118,6 +132,9 @@ func (d *Domain) GetAllMatchedDomains() MatchedDomainsByStrategy {
 	}
 	for _, c := range d.SitemapContactDomains {
 		allDomains.SitemapContactDomains = append(allDomains.SitemapContactDomains, c.DomainName)
+	}
+	for _, c := range d.ReverseWhoisDomains {
+		allDomains.ReverseWhoisDomains = append(allDomains.ReverseWhoisDomains, c.DomainName)
 	}
 	return allDomains
 }

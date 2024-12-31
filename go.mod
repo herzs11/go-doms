@@ -4,9 +4,11 @@ go 1.22.10
 
 require (
 	github.com/fatih/color v1.18.0
+	github.com/joho/godotenv v1.5.1
 	github.com/miekg/dns v1.1.62
 	github.com/temoto/robotstxt v1.1.2
 	github.com/weppos/publicsuffix-go v0.40.2
+	github.com/whois-api-llc/whois-api-go v1.0.0
 )
 
 require (
