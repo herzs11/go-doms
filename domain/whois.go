@@ -31,7 +31,7 @@ type reverseWhoisParams struct {
 	} `json:"basicSearchTerms"`
 }
 
-type Registrant struct {
+type Contact struct {
 	Name         string `json:"name"`
 	Organization string `json:"organization"`
 	Street1      string `json:"street1"`
@@ -48,119 +48,25 @@ type Registrant struct {
 	TelephoneExt string `json:"telephoneExt"`
 	Fax          string `json:"fax"`
 	FaxExt       string `json:"faxExt"`
-	RawText      string `json:"rawText"`
-	Unparsable   string `json:"unparsable"`
 }
 
 type WhoisData struct {
 	DomainName            string    `json:"domainName"`
-	UpdatedDateNormalized string    `json:"updatedDateNormalized"`
-	ExpiresDateNormalized string    `json:"expiresDateNormalized"`
 	CreatedDate           time.Time `json:"createdDate"`
 	UpdatedDate           time.Time `json:"updatedDate"`
-	ExpiresDate           time.Time `json:"expiresDate"`
 	RegistrarName         string    `json:"registrarName"`
 	RegistrarIANAID       string    `json:"registrarIANAID"`
 	Status                string    `json:"status"`
-	RawText               string    `json:"rawText"`
-	ParseCode             int       `json:"parseCode"`
-	Registrant            `json:"registrant"`
-	AdministrativeContact struct {
-		Name         string `json:"name"`
-		Organization string `json:"organization"`
-		Street1      string `json:"street1"`
-		Street2      string `json:"street2"`
-		Street3      string `json:"street3"`
-		Street4      string `json:"street4"`
-		City         string `json:"city"`
-		State        string `json:"state"`
-		PostalCode   string `json:"postalCode"`
-		Country      string `json:"country"`
-		CountryCode  string `json:"countryCode"`
-		Email        string `json:"email"`
-		Telephone    string `json:"telephone"`
-		TelephoneExt string `json:"telephoneExt"`
-		Fax          string `json:"fax"`
-		FaxExt       string `json:"faxExt"`
-		RawText      string `json:"rawText"`
-		Unparsable   string `json:"unparsable"`
-	} `json:"administrativeContact"`
-	TechnicalContact struct {
-		Name         string `json:"name"`
-		Organization string `json:"organization"`
-		Street1      string `json:"street1"`
-		Street2      string `json:"street2"`
-		Street3      string `json:"street3"`
-		Street4      string `json:"street4"`
-		City         string `json:"city"`
-		State        string `json:"state"`
-		PostalCode   string `json:"postalCode"`
-		Country      string `json:"country"`
-		CountryCode  string `json:"countryCode"`
-		Email        string `json:"email"`
-		Telephone    string `json:"telephone"`
-		TelephoneExt string `json:"telephoneExt"`
-		Fax          string `json:"fax"`
-		FaxExt       string `json:"faxExt"`
-		RawText      string `json:"rawText"`
-		Unparsable   string `json:"unparsable"`
-	} `json:"technicalContact"`
-	BillingContact struct {
-		Name         string `json:"name"`
-		Organization string `json:"organization"`
-		Street1      string `json:"street1"`
-		Street2      string `json:"street2"`
-		Street3      string `json:"street3"`
-		Street4      string `json:"street4"`
-		City         string `json:"city"`
-		State        string `json:"state"`
-		PostalCode   string `json:"postalCode"`
-		Country      string `json:"country"`
-		CountryCode  string `json:"countryCode"`
-		Email        string `json:"email"`
-		Telephone    string `json:"telephone"`
-		TelephoneExt string `json:"telephoneExt"`
-		Fax          string `json:"fax"`
-		FaxExt       string `json:"faxExt"`
-		RawText      string `json:"rawText"`
-		Unparsable   string `json:"unparsable"`
-	} `json:"billingContact"`
-	ZoneContact struct {
-		Name         string `json:"name"`
-		Organization string `json:"organization"`
-		Street1      string `json:"street1"`
-		Street2      string `json:"street2"`
-		Street3      string `json:"street3"`
-		Street4      string `json:"street4"`
-		City         string `json:"city"`
-		State        string `json:"state"`
-		PostalCode   string `json:"postalCode"`
-		Country      string `json:"country"`
-		CountryCode  string `json:"countryCode"`
-		Email        string `json:"email"`
-		Telephone    string `json:"telephone"`
-		TelephoneExt string `json:"telephoneExt"`
-		Fax          string `json:"fax"`
-		FaxExt       string `json:"faxExt"`
-		RawText      string `json:"rawText"`
-		Unparsable   string `json:"unparsable"`
-	} `json:"zoneContact"`
-	Header             string    `json:"header"`
-	Footer             string    `json:"footer"`
-	StrippedText       string    `json:"strippedText"`
-	ContactEmail       string    `json:"contactEmail"`
-	DomainAvailability string    `json:"domainAvailability"`
-	DomainNameExt      string    `json:"domainNameExt"`
-	EstimatedDomainAge int       `json:"estimatedDomainAge"`
-	Ips                []string  `json:"ips"`
-	Custom1FieldName   string    `json:"custom1FieldName"`
-	Custom1FieldValue  string    `json:"custom1FieldValue"`
-	Custom2FieldName   string    `json:"custom2FieldName"`
-	Custom2FieldValue  string    `json:"custom2FieldValue"`
-	Custom3FieldName   string    `json:"custom3FieldName"`
-	Custom3FieldValue  string    `json:"custom3FieldValue"`
-	DataError          string    `json:"dataError"`
-	LastUpdated        time.Time `json:"lastRanWhois,omitempty"`
+	Registrant            Contact   `json:"registrant"`
+	AdministrativeContact Contact   `json:"administrativeContact"`
+	TechnicalContact      Contact   `json:"technicalContact"`
+	BillingContact        Contact   `json:"billingContact"`
+	ZoneContact           Contact   `json:"zoneContact"`
+	Header                string    `json:"header"`
+	Footer                string    `json:"footer"`
+	EstimatedDomainAge    int       `json:"estimatedDomainAge"`
+	Ips                   []string  `json:"ips"`
+	LastUpdated           time.Time `json:"lastRanWhois,omitempty"`
 }
 
 func (w *WhoisXMLClient) Query(ctx context.Context, domain string) (*WhoisData, error) {

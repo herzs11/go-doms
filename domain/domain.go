@@ -37,7 +37,8 @@ type Domain struct {
 	SitemapContactDomains []SitemapContactDomain `json:"sitemapContactDomains"`
 	ReverseWhoisDomains   []MatchedDomain        `json:"reverseWhoisDomains"`
 
-	Whois *WhoisData `json:"whoisData"`
+	CertOrgNames []string   `json:"certOrgNames,omitempty"`
+	Whois        *WhoisData `json:"whoisData"`
 
 	sitemapURLs  []string
 	contactPages []string
