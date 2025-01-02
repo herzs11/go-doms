@@ -31,7 +31,7 @@ type reverseWhoisParams struct {
 	} `json:"basicSearchTerms"`
 }
 
-type Contact struct {
+type WhoisContact struct {
 	Name         string `json:"name"`
 	Organization string `json:"organization"`
 	Street1      string `json:"street1"`
@@ -51,22 +51,22 @@ type Contact struct {
 }
 
 type WhoisData struct {
-	DomainName            string    `json:"domainName"`
-	CreatedDate           time.Time `json:"createdDate"`
-	UpdatedDate           time.Time `json:"updatedDate"`
-	RegistrarName         string    `json:"registrarName"`
-	RegistrarIANAID       string    `json:"registrarIANAID"`
-	Status                string    `json:"status"`
-	Registrant            Contact   `json:"registrant"`
-	AdministrativeContact Contact   `json:"administrativeContact"`
-	TechnicalContact      Contact   `json:"technicalContact"`
-	BillingContact        Contact   `json:"billingContact"`
-	ZoneContact           Contact   `json:"zoneContact"`
-	Header                string    `json:"header"`
-	Footer                string    `json:"footer"`
-	EstimatedDomainAge    int       `json:"estimatedDomainAge"`
-	Ips                   []string  `json:"ips"`
-	LastUpdated           time.Time `json:"lastRanWhois,omitempty"`
+	DomainName            string       `json:"domainName"`
+	CreatedDate           time.Time    `json:"createdDate"`
+	UpdatedDate           time.Time    `json:"updatedDate"`
+	RegistrarName         string       `json:"registrarName"`
+	RegistrarIANAID       string       `json:"registrarIANAID"`
+	Status                string       `json:"status"`
+	Registrant            WhoisContact `json:"registrant"`
+	AdministrativeContact WhoisContact `json:"administrativeContact"`
+	TechnicalContact      WhoisContact `json:"technicalContact"`
+	BillingContact        WhoisContact `json:"billingContact"`
+	ZoneContact           WhoisContact `json:"zoneContact"`
+	Header                string       `json:"header"`
+	Footer                string       `json:"footer"`
+	EstimatedDomainAge    int          `json:"estimatedDomainAge"`
+	Ips                   []string     `json:"ips"`
+	LastUpdated           time.Time    `json:"lastRanWhois,omitempty"`
 }
 
 func (w *WhoisXMLClient) Query(ctx context.Context, domain string) (*WhoisData, error) {
@@ -93,7 +93,7 @@ func (w *WhoisXMLClient) Query(ctx context.Context, domain string) (*WhoisData, 
 	if err != nil {
 		return nil, err
 	}
-
+	
 	wd.LastUpdated = time.Now()
 	return &wd.WhoisData, nil
 }
@@ -128,7 +128,7 @@ func (w *WhoisXMLClient) QueryReverse(ctx context.Context, registrantName string
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("got non-200 status code: %d", resp.StatusCode)
 	}
-
+	
 	rData := reverseWhoisResponse{}
 	err = json.NewDecoder(resp.Body).Decode(&rData)
 	if err != nil {
