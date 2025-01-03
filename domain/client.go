@@ -57,11 +57,11 @@ func newWhoisXMLClient(apikey string) *WhoisXMLClient {
 func init() {
 	key := os.Getenv("WHOIS_XML_API_KEY")
 	if key == "" {
-		log.Fatal("could not get Whois api key from environment. Set the 'WHOIS_XML_API_KEY' environment variable")
+		log.Println("could not get Whois api key from environment. Set the 'WHOIS_XML_API_KEY' environment variable")
 	}
 	client = &Client{
 		DNS:   new(dns.Client),
 		HTTP:  newHTTPClient(),
-		Whois: newWhoisXMLClient(os.Getenv("WHOIS_XML_API_KEY")),
+		Whois: newWhoisXMLClient(key),
 	}
 }

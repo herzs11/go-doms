@@ -83,14 +83,6 @@ type EnrichmentConfig struct {
 	MinFreshnessDate time.Time `json:"min_freshness_date"`
 }
 
-func NewEnrichmentConfig(
-	certSans bool, DNS bool, sitemap bool, webRedirect bool, minFreshnessDate time.Time,
-) *EnrichmentConfig {
-	return &EnrichmentConfig{
-		CertSans: certSans, DNS: DNS, Sitemap: sitemap, WebRedirect: webRedirect, MinFreshnessDate: minFreshnessDate,
-	}
-}
-
 func (d *Domain) Enrich(cfg EnrichmentConfig) {
 	if d.LastRanDns.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.DNS {
 		d.GetDNSRecords()
