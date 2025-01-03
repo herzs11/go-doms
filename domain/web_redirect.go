@@ -10,10 +10,6 @@ import (
 	"github.com/weppos/publicsuffix-go/publicsuffix"
 )
 
-type WebRedirectDomain struct {
-	MatchedDomain
-}
-
 func (d *Domain) GetRedirectDomains() error {
 	d.LastRanWebRedirect = time.Now()
 	hosts := make(map[string]bool)
@@ -49,7 +45,7 @@ func (d *Domain) GetRedirectDomains() error {
 	resp, err := redir_client.Get(fmt.Sprintf("http://%s", d.DomainName))
 	if err != nil {
 		d.SuccessfulWebLanding = false
-		d.WebRedirectDomains = []WebRedirectDomain{}
+		d.WebRedirectDomains = []MatchedDomain{}
 		return fmt.Errorf("failed to make request: %v", err)
 	}
 	defer resp.Body.Close()
@@ -57,18 +53,18 @@ func (d *Domain) GetRedirectDomains() error {
 	d.WebRedirectURLFinal = finalURL
 	if len(hosts) == 0 {
 		d.SuccessfulWebLanding = true
-		d.WebRedirectDomains = []WebRedirectDomain{}
+		d.WebRedirectDomains = []MatchedDomain{}
 		return nil
 	}
 	now := time.Now()
-	wrs := []WebRedirectDomain{}
+	var wrs []MatchedDomain
 	for host := range hosts {
 		rdom, err := NewDomain(host)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
-		wr := WebRedirectDomain{MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: rdom.DomainName}}
+		wr := MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: rdom.DomainName}
 		wrs = append(wrs, wr)
 	}
 	d.WebRedirectDomains = wrs
