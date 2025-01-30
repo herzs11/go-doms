@@ -96,7 +96,7 @@ func (d *Domain) Enrich(cfg EnrichmentConfig) {
 	if d.LastRanSitemapParse.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.Sitemap {
 		d.GetDomainsFromSitemap()
 	}
-	if d.LastRanWhois.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.Whois {
+	if d.LastRanWhois.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.Whois && client.Whois != nil {
 		d.GetWhoisData()
 		if d.LastRanReverseWhois.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.ReverseWhois {
 			d.GetReverseWhoisData()

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -93,7 +94,7 @@ func (w *WhoisXMLClient) Query(ctx context.Context, domain string) (*WhoisData, 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	wd.LastUpdated = time.Now()
 	return &wd.WhoisData, nil
 }
@@ -128,7 +129,7 @@ func (w *WhoisXMLClient) QueryReverse(ctx context.Context, registrantName string
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("got non-200 status code: %d", resp.StatusCode)
 	}
-	
+
 	rData := reverseWhoisResponse{}
 	err = json.NewDecoder(resp.Body).Decode(&rData)
 	if err != nil {
@@ -138,6 +139,9 @@ func (w *WhoisXMLClient) QueryReverse(ctx context.Context, registrantName string
 }
 
 func (d *Domain) GetWhoisData() error {
+	if client.Whois == nil {
+		return errors.New("no whois client available")
+	}
 	wd, err := client.Whois.Query(context.Background(), d.DomainName)
 	if err != nil {
 		return err
@@ -147,6 +151,9 @@ func (d *Domain) GetWhoisData() error {
 }
 
 func (d *Domain) GetReverseWhoisData() error {
+	if client.Whois == nil {
+		return errors.New("no whois client available")
+	}
 	rwd, err := client.Whois.QueryReverse(context.Background(), d.Whois.Registrant.Organization)
 	if err != nil {
 		return err

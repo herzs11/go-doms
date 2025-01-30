@@ -43,14 +43,17 @@ type WhoisXMLClient struct {
 	apikey string
 }
 
-func newWhoisXMLClient(apikey string) *WhoisXMLClient {
+func newWhoisXMLClient(apiKey string) *WhoisXMLClient {
+	if apiKey == "" {
+		return nil
+	}
 	return &WhoisXMLClient{
 		whoisapi.NewClient(
-			apikey, whoisapi.ClientParams{
+			apiKey, whoisapi.ClientParams{
 				HTTPClient: newHTTPClient(),
 			},
 		),
-		apikey,
+		apiKey,
 	}
 }
 
