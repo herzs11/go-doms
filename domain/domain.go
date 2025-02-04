@@ -11,31 +11,31 @@ import (
 )
 
 type Domain struct {
-	DomainName            string          `json:"domainName,omitempty"`
-	CreatedAt             time.Time       `json:"createdAt,omitempty"`
-	UpdatedAt             time.Time       `json:"updatedAt,omitempty"`
-	NonPublicDomain       bool            `json:"nonPublicDomain,omitempty"`
-	Hostname              string          `json:"hostname,omitempty"`
-	Subdomain             string          `json:"subdomain,omitempty"`
-	Suffix                string          `json:"suffix,omitempty"`
-	SuccessfulWebLanding  bool            `json:"successfulWebLanding,omitempty"`
-	WebRedirectURLFinal   string          `json:"webRedirectURLFinal,omitempty"`
-	LastRanWebRedirect    time.Time       `json:"lastRanWebRedirect,omitempty"`
-	LastRanDns            time.Time       `json:"lastRanDNS,omitempty"`
-	LastRanCertSans       time.Time       `json:"lastRanCertSANs,omitempty"`
-	LastRanSitemapParse   time.Time       `json:"lastRanSitemapParse,omitempty"`
-	LastRanWhois          time.Time       `json:"LastRanWhois,omitempty"`
-	LastRanReverseWhois   time.Time       `json:"LastRanReverseWhois,omitempty"`
-	ARecords              []ARecord       `json:"aRecords"`
-	AAAARecords           []AAAARecord    `json:"aaaaRecords"`
-	MXRecords             []MXRecord      `json:"mxRecords"`
-	SOARecords            []SOARecord     `json:"soaRecords"`
-	Sitemaps              []*Sitemap      `json:"sitemaps"`
-	WebRedirectDomains    []MatchedDomain `json:"webRedirectDomains"`
-	CertSANs              []MatchedDomain `json:"certSANs"`
-	SitemapWebDomains     []MatchedDomain `json:"sitemapWebDomains"`
-	SitemapContactDomains []MatchedDomain `json:"sitemapContactDomains"`
-	ReverseWhoisDomains   []MatchedDomain `json:"reverseWhoisDomains"`
+	DomainName            string           `json:"domainName,omitempty"`
+	CreatedAt             time.Time        `json:"createdAt,omitempty"`
+	UpdatedAt             time.Time        `json:"updatedAt,omitempty"`
+	NonPublicDomain       bool             `json:"nonPublicDomain,omitempty"`
+	Hostname              string           `json:"hostname,omitempty"`
+	Subdomain             string           `json:"subdomain,omitempty"`
+	Suffix                string           `json:"suffix,omitempty"`
+	SuccessfulWebLanding  bool             `json:"successfulWebLanding,omitempty"`
+	WebRedirectURLFinal   string           `json:"webRedirectURLFinal,omitempty"`
+	LastRanWebRedirect    time.Time        `json:"lastRanWebRedirect,omitempty"`
+	LastRanDns            time.Time        `json:"lastRanDNS,omitempty"`
+	LastRanCertSans       time.Time        `json:"lastRanCertSANs,omitempty"`
+	LastRanSitemapParse   time.Time        `json:"lastRanSitemapParse,omitempty"`
+	LastRanWhois          time.Time        `json:"LastRanWhois,omitempty"`
+	LastRanReverseWhois   time.Time        `json:"LastRanReverseWhois,omitempty"`
+	ARecords              []ARecord        `json:"aRecords"`
+	AAAARecords           []AAAARecord     `json:"aaaaRecords"`
+	MXRecords             []MXRecord       `json:"mxRecords"`
+	SOARecords            []SOARecord      `json:"soaRecords"`
+	Sitemaps              []*Sitemap       `json:"sitemaps"`
+	WebRedirectDomains    []*MatchedDomain `json:"webRedirectDomains"`
+	CertSANs              []*MatchedDomain `json:"certSANs"`
+	SitemapWebDomains     []*MatchedDomain `json:"sitemapWebDomains"`
+	SitemapContactDomains []*MatchedDomain `json:"sitemapContactDomains"`
+	ReverseWhoisDomains   []*MatchedDomain `json:"reverseWhoisDomains"`
 
 	CertOrgNames []string   `json:"certOrgNames,omitempty"`
 	Whois        *WhoisData `json:"whoisData"`

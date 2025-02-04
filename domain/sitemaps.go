@@ -189,7 +189,7 @@ func (d *Domain) getURLsFromSitemaps() {
 }
 
 func (d *Domain) GetWebDomainsFromSitemap() {
-	var domsFound = make(map[string]MatchedDomain)
+	var domsFound = make(map[string]*MatchedDomain)
 	for _, df := range d.SitemapWebDomains {
 		domsFound[df.DomainName] = df
 	}
@@ -209,14 +209,14 @@ func (d *Domain) GetWebDomainsFromSitemap() {
 			continue
 		}
 		if df, exists := domsFound[dom.DomainName]; !exists {
-			sd := MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dom.DomainName}
+			sd := &MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dom.DomainName}
 			domsFound[dom.DomainName] = sd
 		} else {
 			df.UpdatedAt = now
 			domsFound[dom.DomainName] = df
 		}
 	}
-	var wd []MatchedDomain
+	var wd []*MatchedDomain
 	for _, df := range domsFound {
 		wd = append(wd, df)
 	}
@@ -229,7 +229,7 @@ func (d *Domain) GetContactDomainsFromSitemap() error {
 		return fmt.Errorf("No contact pages found in sitemap")
 	}
 
-	var domsFound = make(map[string]MatchedDomain)
+	var domsFound = make(map[string]*MatchedDomain)
 	for _, df := range d.SitemapContactDomains {
 		domsFound[df.DomainName] = df
 	}
@@ -266,7 +266,7 @@ func (d *Domain) GetContactDomainsFromSitemap() error {
 				continue
 			}
 			if df, exists := domsFound[dom.DomainName]; !exists {
-				sd := MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dom.DomainName}
+				sd := &MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dom.DomainName}
 				domsFound[dom.DomainName] = sd
 			} else {
 				df.UpdatedAt = now
@@ -274,7 +274,7 @@ func (d *Domain) GetContactDomainsFromSitemap() error {
 			}
 		}
 	}
-	var cd []MatchedDomain
+	var cd []*MatchedDomain
 	for _, df := range domsFound {
 		cd = append(cd, df)
 	}

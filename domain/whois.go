@@ -52,22 +52,22 @@ type WhoisContact struct {
 }
 
 type WhoisData struct {
-	DomainName            string       `json:"domainName"`
-	CreatedDate           time.Time    `json:"createdDate"`
-	UpdatedDate           time.Time    `json:"updatedDate"`
-	RegistrarName         string       `json:"registrarName"`
-	RegistrarIANAID       string       `json:"registrarIANAID"`
-	Status                string       `json:"status"`
-	Registrant            WhoisContact `json:"registrant"`
-	AdministrativeContact WhoisContact `json:"administrativeContact"`
-	TechnicalContact      WhoisContact `json:"technicalContact"`
-	BillingContact        WhoisContact `json:"billingContact"`
-	ZoneContact           WhoisContact `json:"zoneContact"`
-	Header                string       `json:"header"`
-	Footer                string       `json:"footer"`
-	EstimatedDomainAge    int          `json:"estimatedDomainAge"`
-	Ips                   []string     `json:"ips"`
-	LastUpdated           time.Time    `json:"lastRanWhois,omitempty"`
+	DomainName            string        `json:"domainName"`
+	CreatedDate           time.Time     `json:"createdDate"`
+	UpdatedDate           time.Time     `json:"updatedDate"`
+	RegistrarName         string        `json:"registrarName"`
+	RegistrarIANAID       string        `json:"registrarIANAID"`
+	Status                string        `json:"status"`
+	Registrant            *WhoisContact `json:"registrant"`
+	AdministrativeContact *WhoisContact `json:"administrativeContact"`
+	TechnicalContact      *WhoisContact `json:"technicalContact"`
+	BillingContact        *WhoisContact `json:"billingContact"`
+	ZoneContact           *WhoisContact `json:"zoneContact"`
+	Header                string        `json:"header"`
+	Footer                string        `json:"footer"`
+	EstimatedDomainAge    int           `json:"estimatedDomainAge"`
+	Ips                   []string      `json:"ips"`
+	LastUpdated           time.Time     `json:"lastRanWhois,omitempty"`
 }
 
 func (w *WhoisXMLClient) Query(ctx context.Context, domain string) (*WhoisData, error) {

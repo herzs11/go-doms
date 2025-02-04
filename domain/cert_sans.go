@@ -33,7 +33,7 @@ func (d *Domain) GetCertSANs() error {
 	cert := tlsConn.ConnectionState().PeerCertificates[0]
 	d.CertOrgNames = cert.Subject.Organization
 	now := time.Now()
-	domsFound := make(map[string]MatchedDomain)
+	domsFound := make(map[string]*MatchedDomain)
 	for _, df := range d.CertSANs {
 		domsFound[df.DomainName] = df
 	}
@@ -47,14 +47,14 @@ func (d *Domain) GetCertSANs() error {
 			continue
 		}
 		if c, exists := domsFound[dm.DomainName]; !exists {
-			certSAN := MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dm.DomainName}
+			certSAN := &MatchedDomain{CreatedAt: now, UpdatedAt: now, DomainName: dm.DomainName}
 			domsFound[dm.DomainName] = certSAN
 		} else {
 			c.UpdatedAt = now
 			domsFound[dm.DomainName] = c
 		}
 	}
-	var cs []MatchedDomain
+	var cs []*MatchedDomain
 	for _, c := range domsFound {
 		cs = append(cs, c)
 	}
