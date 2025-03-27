@@ -83,7 +83,7 @@ type EnrichmentConfig struct {
 	MinFreshnessDate time.Time `json:"min_freshness_date"`
 }
 
-func (d *Domain) Enrich(cfg EnrichmentConfig) {
+func (d *Domain) Enrich(cfg *EnrichmentConfig) {
 	if d.LastRanDns.Unix() <= cfg.MinFreshnessDate.Unix() && cfg.DNS {
 		d.GetDNSRecords()
 	}
@@ -113,7 +113,7 @@ type MatchedDomainsByStrategy struct {
 }
 
 func (d *Domain) GetAllMatchedDomains() MatchedDomainsByStrategy {
-	var allDomains = MatchedDomainsByStrategy{}
+	allDomains := MatchedDomainsByStrategy{}
 	for _, w := range d.WebRedirectDomains {
 		allDomains.WebRedirectDomains = append(allDomains.WebRedirectDomains, w.DomainName)
 	}
